@@ -1,13 +1,54 @@
+----------------------------------------
 Numero de nodos del grafo: 15
 Numero de aristas del grafo: 19
-
 Vertice origen: 2
-Vertice destino: 6
-
+Vertice destino: 7
 Estrategia: Busqueda en profundidad (DFS)
-
-Nodos generados (en orden de descubrimiento): 2, 4, 3, 1, 11, 12, 6
-Nodos inspeccionados (orden de expansion): 2, 1, 3, 4, 6
-
-Camino: 2 - 1 - 3 - 4 - 6
-Costo: 31.00
+----------------------------------------
+Iteracion 1
+Nodos generados: 2
+Nodos inspeccionados: -
+----------------------------------------
+Iteracion 2
+Nodos generados: 2, 4, 3, 1
+Nodos inspeccionados: 2
+----------------------------------------
+Iteracion 3
+Nodos generados: 2, 4, 3, 1, 3
+Nodos inspeccionados: 2, 1
+----------------------------------------
+Iteracion 4
+Nodos generados: 2, 4, 3, 1, 3, 11, 4
+Nodos inspeccionados: 2, 1, 3
+----------------------------------------
+Iteracion 5
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6
+Nodos inspeccionados: 2, 1, 3, 4
+----------------------------------------
+Iteracion 6
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5
+Nodos inspeccionados: 2, 1, 3, 4, 6
+----------------------------------------
+Iteracion 7
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5, 13, 12
+Nodos inspeccionados: 2, 1, 3, 4, 6, 5
+----------------------------------------
+Iteracion 8
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5, 13, 12
+Nodos inspeccionados: 2, 1, 3, 4, 6, 5, 12
+----------------------------------------
+Iteracion 9
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5, 13, 12, 8
+Nodos inspeccionados: 2, 1, 3, 4, 6, 5, 12, 13
+----------------------------------------
+Iteracion 10
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5, 13, 12, 8, 14, 7
+Nodos inspeccionados: 2, 1, 3, 4, 6, 5, 12, 13, 8
+----------------------------------------
+Iteracion 11
+Nodos generados: 2, 4, 3, 1, 3, 11, 4, 12, 6, 10, 9, 7, 5, 13, 12, 8, 14, 7
+Nodos inspeccionados: 2, 1, 3, 4, 6, 5, 12, 13, 8, 7
+----------------------------------------
+Camino: 2 - 1 - 3 - 4 - 6 - 5 - 13 - 8 - 7
+Costo: 64.00
+----------------------------------------

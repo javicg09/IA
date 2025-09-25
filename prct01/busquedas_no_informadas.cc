@@ -24,38 +24,58 @@ void PrintHelp() {
       << "  opcode       Parámetro de búsqueda (1 o 2)";
 }
 
-// Informe con datos pedidos
 static void EscribirInforme(const std::string& fichero,
                             const Mapa& G,
                             int origen, int destino,
                             const std::string& estrategia,
-                            const std::vector<int>& generados,
-                            const std::vector<int>& inspeccionados,
+                            const std::vector< std::vector<int> >& generados,
+                            const std::vector< std::vector<int> >& inspeccionados,
                             const std::vector<int>& camino,
                             double coste) {
   std::ofstream out(fichero.c_str());
   out.setf(std::ios::fixed);
 
+  auto linea = [&out]() {
+    out << "----------------------------------------\n";
+  };
+
+  linea();
   out << "Numero de nodos del grafo: " << G.numNodos() << "\n";
-  out << "Numero de aristas del grafo: " << G.numAristas() << "\n\n";
+  out << "Numero de aristas del grafo: " << G.numAristas() << "\n";
   out << "Vertice origen: " << origen << "\n";
-  out << "Vertice destino: " << destino << "\n\n";
-  out << "Estrategia: " << estrategia << "\n\n";
+  out << "Vertice destino: " << destino << "\n";
+  out << "Estrategia: " << estrategia << "\n";
+  linea();
 
-  out << "Nodos generados (en orden de descubrimiento): ";
+  // Iteraciones en orden
   for (size_t i = 0; i < generados.size(); ++i) {
-    if (i) out << ", ";
-    out << generados[i];
-  }
-  out << "\n";
+    out << "Iteracion " << (i + 1) << "\n";
 
-  out << "Nodos inspeccionados (orden de expansion): ";
-  for (size_t i = 0; i < inspeccionados.size(); ++i) {
-    if (i) out << ", ";
-    out << inspeccionados[i];
-  }
-  out << "\n\n";
+    out << "Nodos generados: ";
+    if (generados[i].empty()) {
+      out << "-";
+    } else {
+      for (size_t j = 0; j < generados[i].size(); ++j) {
+        if (j) out << ", ";
+        out << generados[i][j];
+      }
+    }
+    out << "\n";
 
+    out << "Nodos inspeccionados: ";
+    if (inspeccionados[i].empty()) {
+      out << "-";
+    } else {
+      for (size_t j = 0; j < inspeccionados[i].size(); ++j) {
+        if (j) out << ", ";
+        out << inspeccionados[i][j];
+      }
+    }
+    out << "\n";
+    linea();
+  }
+
+  // Resultado final
   if (!camino.empty()) {
     out << "Camino: ";
     for (size_t i = 0; i < camino.size(); ++i) {
@@ -68,87 +88,101 @@ static void EscribirInforme(const std::string& fichero,
   } else {
     out << "Camino: no encontrado\n";
   }
+  linea();
 }
 
-// BFS por ramas (cola de caminos)
+// Búsqueda por amplitud (BFS)
 static bool BFS(const Mapa& G, int origen, int destino,
-                std::vector<int>& generados,
-                std::vector<int>& inspeccionados,
-                std::vector<int>& caminoFinal,
-                double& costeFinal) {
-  std::queue<Nodo> frontera;   // cola de ramas
-  std::set<int> vistos;        // para registrar "nodos generados" 1ª vez
+                     std::vector< std::vector<int> >& generados,
+                     std::vector< std::vector<int> >& inspeccionados,
+                     std::vector<int>& caminoFinal,
+                     double& costeFinal) {
+  std::queue<Nodo> frontera;
+  std::vector<int> generados_acum;
+  std::vector<int> inspeccionados_acum;
 
-  Nodo ini(origen);
-  frontera.push(ini);
-  vistos.insert(origen);
-  generados.push_back(origen);
+  Nodo inicial(origen);
+  frontera.push(inicial);
+  generados_acum.push_back(origen);
+
+  // Iteración inicial
+  generados.push_back(generados_acum);
+  inspeccionados.push_back(inspeccionados_acum);
 
   while (!frontera.empty()) {
     Nodo actual = frontera.front();
     frontera.pop();
 
     int u = actual.getCamino().back();
-    inspeccionados.push_back(u);
+    inspeccionados_acum.push_back(u);
 
     if (u == destino) {
       caminoFinal = actual.getCamino();
       costeFinal = G.costeCamino(caminoFinal);
+      generados.push_back(generados_acum);
+      inspeccionados.push_back(inspeccionados_acum);
       return true;
     }
 
-    const std::vector< std::pair<int,double> >& vec = G.vecinos(u);
-    for (size_t i = 0; i < vec.size(); ++i) {
-      int v = vec[i].first;
-      double w = vec[i].second;
+    const auto& vecinos = G.vecinos(u);
+    for (const auto& par : vecinos) {
+      int v = par.first;
+      double w = par.second;
 
-      if (actual.contiene(v)) continue; // evita ciclos en la rama
+      if (actual.contiene(v)) continue; // evita ciclos dentro de la rama
 
       Nodo sig = actual;
       sig.anadirPaso(v, w);
       frontera.push(sig);
 
-      if (vistos.find(v) == vistos.end()) {
-        vistos.insert(v);
-        generados.push_back(v);
-      }
+      // Control por ramas → registramos siempre que generamos un nuevo camino
+      generados_acum.push_back(v);
     }
+
+    // Snapshot tras expandir u
+    generados.push_back(generados_acum);
+    inspeccionados.push_back(inspeccionados_acum);
   }
   return false;
 }
 
-// DFS por ramas (pila de caminos)
+// Búsqueda en profundidad (DFS)
 static bool DFS(const Mapa& G, int origen, int destino,
-                std::vector<int>& generados,
-                std::vector<int>& inspeccionados,
-                std::vector<int>& caminoFinal,
-                double& costeFinal) {
-  std::vector<Nodo> pila;      // pila de ramas (LIFO)
-  std::set<int> vistos;
+                     std::vector< std::vector<int> >& generados,
+                     std::vector< std::vector<int> >& inspeccionados,
+                     std::vector<int>& caminoFinal,
+                     double& costeFinal) {
+  std::vector<Nodo> pila;
+  std::vector<int> generados_acum;
+  std::vector<int> inspeccionados_acum;
 
-  Nodo ini(origen);
-  pila.push_back(ini);
-  vistos.insert(origen);
-  generados.push_back(origen);
+  Nodo inicial(origen);
+  pila.push_back(inicial);
+  generados_acum.push_back(origen);
+
+  // Iteración inicial
+  generados.push_back(generados_acum);
+  inspeccionados.push_back(inspeccionados_acum);
 
   while (!pila.empty()) {
     Nodo actual = pila.back();
     pila.pop_back();
 
     int u = actual.getCamino().back();
-    inspeccionados.push_back(u);
+    inspeccionados_acum.push_back(u);
 
     if (u == destino) {
       caminoFinal = actual.getCamino();
       costeFinal = G.costeCamino(caminoFinal);
+      generados.push_back(generados_acum);
+      inspeccionados.push_back(inspeccionados_acum);
       return true;
     }
 
-    const std::vector< std::pair<int,double> >& vec = G.vecinos(u);
-    // Insertamos en orden inverso para que el primero del vector se expanda antes
-    for (int i = (int)vec.size() - 1; i >= 0; --i) {
-      int v = vec[i].first;
-      double w = vec[i].second;
+    const auto& vecinos = G.vecinos(u);
+    for (int i = (int)vecinos.size() - 1; i >= 0; --i) {
+      int v = vecinos[i].first;
+      double w = vecinos[i].second;
 
       if (actual.contiene(v)) continue;
 
@@ -156,11 +190,12 @@ static bool DFS(const Mapa& G, int origen, int destino,
       sig.anadirPaso(v, w);
       pila.push_back(sig);
 
-      if (vistos.find(v) == vistos.end()) {
-        vistos.insert(v);
-        generados.push_back(v);
-      }
+      // Control por ramas → lo agrego cada vez que se genera
+      generados_acum.push_back(v);
     }
+
+    generados.push_back(generados_acum);
+    inspeccionados.push_back(inspeccionados_acum);
   }
   return false;
 }
@@ -205,7 +240,8 @@ int main(int argc, char* argv[]) {
   std::cin >> destino;
 
   // Ejecutar búsqueda
-  std::vector<int> generados, inspeccionados, camino;
+  std::vector<int> camino;
+  std::vector<std::vector<int>> generados, inspeccionados;
   double coste = 0.0;
   bool exito = false;
   std::string estrategia;

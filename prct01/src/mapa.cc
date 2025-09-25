@@ -10,7 +10,7 @@ void Mapa::reiniciar(int n_) {
     adj.assign(n + 1, std::vector< std::pair<int,double> >());
 }
 
-void Mapa::anadirAristaNoDirigida(int u, int v, double w) {
+void Mapa::Arista(int u, int v, double w) {
     if (u < 1 || v < 1 || u > n || v > n) return;
     adj[u].push_back(std::make_pair(v, w));
     adj[v].push_back(std::make_pair(u, w));
@@ -31,7 +31,7 @@ bool Mapa::cargar(const std::string& fichero) {
             double d;
             if (!(in >> d)) return false;
             if (d >= 0.0) {
-                anadirAristaNoDirigida(i, j, d);
+                Arista(i, j, d);
             }
         }
     }
