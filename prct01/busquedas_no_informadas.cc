@@ -8,6 +8,8 @@
 #include <set>
 #include <algorithm>
 #include <iomanip>
+#include <random>
+#include <limits>
 
 #include "lib/mapa.h"
 #include "lib/nodo.h"
@@ -116,8 +118,6 @@ static bool BFS(const Mapa& G, int origen, int destino,
     // inspeccionamos u (ya cuenta como inspeccionado)
     inspeccionados_acum.push_back(u);
 
-    // ⛔ OJO: ya no paramos aquí; paramos al GENERAR el destino
-
     // expandimos u
     const auto& vecinos = G.vecinos(u);
     for (const auto& par : vecinos) {
@@ -131,7 +131,6 @@ static bool BFS(const Mapa& G, int origen, int destino,
       // registramos SIEMPRE el generado (control por ramas)
       generados_acum.push_back(v);
 
-      // ⛔ PARADA al GENERAR el destino
       if (v == destino) {
         caminoFinal = sig.getCamino();
         costeFinal  = G.costeCamino(caminoFinal);
@@ -178,8 +177,6 @@ static bool DFS(const Mapa& G, int origen, int destino,
     // inspeccionamos u
     inspeccionados_acum.push_back(u);
 
-    // ⛔ OJO: ya no paramos aquí; paramos al GENERAR el destino
-
     const auto& vecinos = G.vecinos(u);
     // (opcional) orden inverso para que el 1º del vector se expanda antes
     for (int i = (int)vecinos.size() - 1; i >= 0; --i) {
@@ -193,7 +190,6 @@ static bool DFS(const Mapa& G, int origen, int destino,
       // registramos siempre el generado (por ramas)
       generados_acum.push_back(v);
 
-      // ⛔ PARADA al GENERAR el destino
       if (v == destino) {
         caminoFinal = sig.getCamino();
         costeFinal  = G.costeCamino(caminoFinal);

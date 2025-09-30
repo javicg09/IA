@@ -1,0 +1,126 @@
+static bool BFS_top2_random(const Mapa& G, int origen, int destino,
+                            std::vector<std::vector<int>>& generados_iter,
+                            std::vector<std::vector<int>>& inspeccionados_iter,
+                            std::vector<int>& caminoFinal,
+                            double& costeFinal) {
+  generados_iter.clear();
+  inspeccionados_iter.clear();
+  caminoFinal.clear();
+  costeFinal = 0.0;
+
+  // Frontera de RAMAS (cada Nodo es un camino completo)
+  std::vector<Nodo> frontera;
+
+  // Acumulados para las iteraciones
+  std::vector<int> generados_acum;
+  std::vector<int> inspeccionados_acum;
+
+  // RNG para la elección aleatoria entre los 2 mejores
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<int> coin(0, 1);
+
+  // Inicialización: rama con solo el origen
+  Nodo ini(origen);
+  frontera.push_back(ini);
+  generados_acum.push_back(origen);
+
+  // Iteración 1: origen generado, nadie inspeccionado
+  generados_iter.push_back(generados_acum);
+  inspeccionados_iter.push_back(inspeccionados_acum);
+
+  // Bucle principal
+  while (!frontera.empty()) {
+    // --- Elegir el índice del nodo a inspeccionar:
+    //     uno de los dos mejores (menor coste) al azar.
+    int best1 = -1, best2 = -1;
+    double c1 = std::numeric_limits<double>::infinity();
+    double c2 = std::numeric_limits<double>::infinity();
+
+    for (int i = 0; i < (int)frontera.size(); ++i) {
+      double c = frontera[i].getCoste();
+      if (c < c1) { // nuevo mejor
+        c2 = c1; best2 = best1;
+        c1 = c;  best1 = i;
+      } else if (c < c2) { // nuevo segundo mejor
+        c2 = c;  best2 = i;
+      }
+    }
+
+    int pick = best1;
+    if (best2 != -1) {
+      // si hay al menos dos, elige aleatoriamente uno de los dos
+      pick = (coin(gen) == 0 ? best1 : best2);
+    }
+
+    // Extrae la rama elegida para inspeccionar
+    Nodo actual = frontera[pick];
+    frontera.erase(frontera.begin() + pick);
+
+    int u = actual.getCamino().back();
+    // Registramos inspección
+    inspeccionados_acum.push_back(u);
+
+    // Expandimos u (CONTROL POR RAMAS: registramos TODOS los generados)
+    const auto& vecinos = G.vecinos(u);
+    for (const auto& par : vecinos) {
+      int v = par.first;
+      double w = par.second;
+
+      // Evita ciclos SOLO dentro de la MISMA rama
+      if (actual.contiene(v)) continue;
+
+      Nodo sig = actual;
+      sig.anadirPaso(v, w);
+
+      // Registrar generado SIEMPRE (por ramas)
+      generados_acum.push_back(v);
+
+      // PARADA al GENERAR el destino
+      if (v == destino) {
+        caminoFinal = sig.getCamino();
+        // Puedes usar sig.getCoste() o recalcular:
+        // costeFinal  = sig.getCoste();
+        costeFinal  = G.costeCamino(caminoFinal);
+
+        // Snapshot final de esta iteración
+        generados_iter.push_back(generados_acum);
+        inspeccionados_iter.push_back(inspeccionados_acum);
+        return true;
+      }
+
+      // Si no es destino, añadimos la nueva rama a la frontera
+      frontera.push_back(sig);
+    }
+
+    // Snapshot tras expandir u
+    generados_iter.push_back(generados_acum);
+    inspeccionados_iter.push_back(inspeccionados_acum);
+  }
+
+  // Si se vacía la frontera sin llegar al destino
+  return false;
+}
+Cómo llamarla desde tu main
+cpp
+Copiar código
+std::vector<std::vector<int>> generados_iter, inspeccionados_iter;
+std::vector<int> camino;
+double coste = 0.0;
+
+bool ok = BFS_top2_random(G, origen, destino, generados_iter, inspeccionados_iter, camino, coste);
+
+std::string estrategia = "Búsqueda en amplitud (Top-2 aleatorio por coste, control por ramas)";
+EscribirInforme(file_out, G, origen, destino, estrategia,
+                generados_iter, inspeccionados_iter, camino, coste);
+
+if (ok) {
+  std::cout << "[OK] Camino: ";
+  for (size_t i = 0; i < camino.size(); ++i) {
+    if (i) std::cout << " - ";
+    std::cout << camino[i];
+  }
+  std::cout << "  (coste=" << std::fixed << std::setprecision(2) << coste << ")\n";
+} else {
+  std::cout << "Camino no encontrado.\n";
+}
