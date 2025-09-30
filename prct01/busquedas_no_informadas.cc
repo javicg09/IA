@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <iomanip>
 #include <random>
-#include <limits>
 
 #include "lib/mapa.h"
 #include "lib/nodo.h"
@@ -33,7 +32,7 @@ static void EscribirInforme(const std::string& fichero,
                             const std::vector< std::vector<int> >& generados,
                             const std::vector< std::vector<int> >& inspeccionados,
                             const std::vector<int>& camino,
-                            double coste) {
+                            int coste) {
   std::ofstream out(fichero.c_str());
   out.setf(std::ios::fixed);
 
@@ -95,16 +94,30 @@ static void EscribirInforme(const std::string& fichero,
 
 // Búsqueda por amplitud (BFS)
 static bool BFS(const Mapa& G, int origen, int destino,
-                     std::vector<std::vector<int>>& generados,
-                     std::vector<std::vector<int>>& inspeccionados,
-                     std::vector<int>& caminoFinal,
-                     double& costeFinal) {
-  std::queue<Nodo> frontera;
+                            std::vector<std::vector<int>>& generados,
+                            std::vector<std::vector<int>>& inspeccionados,
+                            std::vector<int>& caminoFinal,
+                            int& costeFinal) {
+  generados.clear();
+  inspeccionados.clear();
+  caminoFinal.clear();
+  costeFinal = 0.0;
+
+  // Frontera de RAMAS
+  std::vector<Nodo> frontera;
+
+  // Acumulados para las iteraciones
   std::vector<int> generados_acum;
   std::vector<int> inspeccionados_acum;
 
+  // RNG para la elección aleatoria entre los 2 mejores
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<int> coin(0, 1);
+
+  // Inicialización: rama con solo el origen
   Nodo ini(origen);
-  frontera.push(ini);
+  frontera.push_back(ini);
   generados_acum.push_back(origen);
 
   // Iteración 1: origen generado, nadie inspeccionado
@@ -112,43 +125,85 @@ static bool BFS(const Mapa& G, int origen, int destino,
   inspeccionados.push_back(inspeccionados_acum);
 
   while (!frontera.empty()) {
-    Nodo actual = frontera.front(); frontera.pop();
-    int u = actual.getCamino().back();
+    // Elegir uno de los dos mejores (menor coste) al azar.
+    int pick = 0;            // índice elegido al final
+    int best1 = -1, best2 = -1;
+    int c1 = 0.0, c2 = 0.0;
 
-    // inspeccionamos u (ya cuenta como inspeccionado)
+    const int nF = (int)frontera.size();
+    if (nF == 0) return false;           // por si acaso
+    if (nF == 1) {
+      pick = 0;                        // sólo hay uno
+    } else {
+      // inicializa con los dos primeros en orden
+      int a = frontera[0].getCoste();
+      int b = frontera[1].getCoste();
+      if (a <= b) {
+        best1 = 0; c1 = a;
+        best2 = 1; c2 = b;
+      } else {
+        best1 = 1; c1 = b;
+        best2 = 0; c2 = a;
+      }
+
+      // procesa el resto
+      for (int i = 2; i < nF; ++i) {
+        int c = frontera[i].getCoste();
+        if (c < c1) {
+            // nuevo mejor desplaza al segundo
+            best2 = best1; c2 = c1;
+            best1 = i;     c1 = c;
+        } else if (c < c2) {
+            // nuevo segundo mejor
+            best2 = i;     c2 = c;
+        }
+      }
+
+      // elige aleatoriamente entre los dos mejores
+      pick = (coin(gen) == 0 ? best1 : best2);
+    }
+
+    // Extrae la rama elegida para inspeccionar
+    Nodo actual = frontera[pick];
+    frontera.erase(frontera.begin() + pick);
+
+    int u = actual.getCamino().back();
+    // Registramos inspección
     inspeccionados_acum.push_back(u);
 
-    // expandimos u
+    if (u == destino) {
+      caminoFinal = actual.getCamino();
+      costeFinal = G.costeCamino(caminoFinal);
+      generados.push_back(generados_acum);
+      inspeccionados.push_back(inspeccionados_acum);
+      return true;
+    }
+
+    // Expandimos u
     const auto& vecinos = G.vecinos(u);
     for (const auto& par : vecinos) {
       int v = par.first;
-      double w = par.second;
-      if (actual.contiene(v)) continue;   // evita ciclo en la misma rama
+      int w = par.second;
+
+      // Evita ciclos dentro de la MISMA rama
+      if (actual.contiene(v)) continue;
 
       Nodo sig = actual;
       sig.anadirPaso(v, w);
 
-      // registramos SIEMPRE el generado (control por ramas)
+      // Registrar generado
       generados_acum.push_back(v);
 
-      if (v == destino) {
-        caminoFinal = sig.getCamino();
-        costeFinal  = G.costeCamino(caminoFinal);
-
-        // snapshot de cierre de esta iteración
-        generados.push_back(generados_acum);
-        inspeccionados.push_back(inspeccionados_acum);
-        return true;  // ← aquí se detiene la búsqueda
-      }
-
-      // no es destino: encolamos la nueva rama
-      frontera.push(sig);
+      // Si no es destino, añadimos la nueva rama a la frontera
+      frontera.push_back(sig);
     }
 
-    // snapshot tras expandir u
+    // Snapshot tras expandir u
     generados.push_back(generados_acum);
     inspeccionados.push_back(inspeccionados_acum);
   }
+
+  // Si se vacía la frontera sin llegar al destino
   return false;
 }
 
@@ -157,7 +212,7 @@ static bool DFS(const Mapa& G, int origen, int destino,
                      std::vector<std::vector<int>>& generados,
                      std::vector<std::vector<int>>& inspeccionados,
                      std::vector<int>& caminoFinal,
-                     double& costeFinal) {
+                     int& costeFinal) {
   std::vector<Nodo> pila;   // usamos vector como pila LIFO
   std::vector<int> generados_acum;
   std::vector<int> inspeccionados_acum;
@@ -177,11 +232,19 @@ static bool DFS(const Mapa& G, int origen, int destino,
     // inspeccionamos u
     inspeccionados_acum.push_back(u);
 
+    if (u == destino) {
+      caminoFinal = actual.getCamino();
+      costeFinal = G.costeCamino(caminoFinal);
+      generados.push_back(generados_acum);
+      inspeccionados.push_back(inspeccionados_acum);
+      return true;
+    }
+
     const auto& vecinos = G.vecinos(u);
     // (opcional) orden inverso para que el 1º del vector se expanda antes
     for (int i = (int)vecinos.size() - 1; i >= 0; --i) {
       int v = vecinos[i].first;
-      double w = vecinos[i].second;
+      int w = vecinos[i].second;
       if (actual.contiene(v)) continue;
 
       Nodo sig = actual;
@@ -189,15 +252,6 @@ static bool DFS(const Mapa& G, int origen, int destino,
 
       // registramos siempre el generado (por ramas)
       generados_acum.push_back(v);
-
-      if (v == destino) {
-        caminoFinal = sig.getCamino();
-        costeFinal  = G.costeCamino(caminoFinal);
-
-        generados.push_back(generados_acum);
-        inspeccionados.push_back(inspeccionados_acum);
-        return true;
-      }
 
       // no es destino: apilamos la nueva rama
       pila.push_back(sig);
@@ -251,7 +305,7 @@ int main(int argc, char* argv[]) {
   // Ejecutar búsqueda
   std::vector<int> camino;
   std::vector<std::vector<int>> generados, inspeccionados;
-  double coste = 0.0;
+  int coste = 0.0;
   bool exito = false;
   std::string estrategia;
 
