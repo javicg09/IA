@@ -1,74 +1,34 @@
 ----------------------------------------
 Numero de nodos del grafo: 15
-Numero de aristas del grafo: 19
+Numero de aristas del grafo: 15
 Vertice origen: 4
 Vertice destino: 9
-Estrategia: Busqueda en profundidad (DFS)
+Estrategia: Busqueda en amplitud (BFS)
 ----------------------------------------
 Iteracion 1
 Nodos generados: 4
 Nodos inspeccionados: -
 ----------------------------------------
 Iteracion 2
-Nodos generados: 4, 12, 6, 3, 2
+Nodos generados: 4, 5
 Nodos inspeccionados: 4
 ----------------------------------------
 Iteracion 3
-Nodos generados: 4, 12, 6, 3, 2, 3, 1
-Nodos inspeccionados: 4, 2
+Nodos generados: 4, 5, 2, 6
+Nodos inspeccionados: 4, 5
 ----------------------------------------
 Iteracion 4
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3
-Nodos inspeccionados: 4, 2, 1
+Nodos generados: 4, 5, 2, 6, 7, 8
+Nodos inspeccionados: 4, 5, 2
 ----------------------------------------
 Iteracion 5
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11
-Nodos inspeccionados: 4, 2, 1, 3
+Nodos generados: 4, 5, 2, 6, 7, 8, 7
+Nodos inspeccionados: 4, 5, 2, 6
 ----------------------------------------
 Iteracion 6
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11
-Nodos inspeccionados: 4, 2, 1, 3, 11
+Nodos generados: 4, 5, 2, 6, 7, 8, 7, 6, 9
+Nodos inspeccionados: 4, 5, 2, 6, 7
 ----------------------------------------
-Iteracion 7
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3
-----------------------------------------
-Iteracion 8
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1
-----------------------------------------
-Iteracion 9
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11
-----------------------------------------
-Iteracion 10
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3
-----------------------------------------
-Iteracion 11
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1
-----------------------------------------
-Iteracion 12
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1, 2
-----------------------------------------
-Iteracion 13
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1, 2, 2
-----------------------------------------
-Iteracion 14
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1, 2, 2, 1
-----------------------------------------
-Iteracion 15
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2, 1
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1, 2, 2, 1, 11
-----------------------------------------
-Iteracion 16
-Nodos generados: 4, 12, 6, 3, 2, 3, 1, 3, 11, 11, 1, 11, 2, 1, 2, 1, 10, 9
-Nodos inspeccionados: 4, 2, 1, 3, 11, 3, 1, 11, 3, 1, 2, 2, 1, 11, 6
-----------------------------------------
-Camino: 4 - 6 - 9
-Costo: 10.00
+Camino: 4 - 5 - 2 - 7 - 9
+Costo: 21.00
 ----------------------------------------
