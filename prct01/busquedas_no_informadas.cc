@@ -93,53 +93,60 @@ static void EscribirInforme(const std::string& fichero,
 
 // Búsqueda por amplitud (BFS)
 static bool BFS(const Mapa& G, int origen, int destino,
-                     std::vector< std::vector<int> >& generados,
-                     std::vector< std::vector<int> >& inspeccionados,
+                     std::vector<std::vector<int>>& generados,
+                     std::vector<std::vector<int>>& inspeccionados,
                      std::vector<int>& caminoFinal,
                      double& costeFinal) {
   std::queue<Nodo> frontera;
   std::vector<int> generados_acum;
   std::vector<int> inspeccionados_acum;
 
-  Nodo inicial(origen);
-  frontera.push(inicial);
+  Nodo ini(origen);
+  frontera.push(ini);
   generados_acum.push_back(origen);
 
-  // Iteración inicial
+  // Iteración 1: origen generado, nadie inspeccionado
   generados.push_back(generados_acum);
   inspeccionados.push_back(inspeccionados_acum);
 
   while (!frontera.empty()) {
-    Nodo actual = frontera.front();
-    frontera.pop();
-
+    Nodo actual = frontera.front(); frontera.pop();
     int u = actual.getCamino().back();
+
+    // inspeccionamos u (ya cuenta como inspeccionado)
     inspeccionados_acum.push_back(u);
 
-    if (u == destino) {
-      caminoFinal = actual.getCamino();
-      costeFinal = G.costeCamino(caminoFinal);
-      generados.push_back(generados_acum);
-      inspeccionados.push_back(inspeccionados_acum);
-      return true;
-    }
+    // ⛔ OJO: ya no paramos aquí; paramos al GENERAR el destino
 
+    // expandimos u
     const auto& vecinos = G.vecinos(u);
     for (const auto& par : vecinos) {
       int v = par.first;
       double w = par.second;
-
-      if (actual.contiene(v)) continue; // evita ciclos dentro de la rama
+      if (actual.contiene(v)) continue;   // evita ciclo en la misma rama
 
       Nodo sig = actual;
       sig.anadirPaso(v, w);
-      frontera.push(sig);
 
-      // Control por ramas → registramos siempre que generamos un nuevo camino
+      // registramos SIEMPRE el generado (control por ramas)
       generados_acum.push_back(v);
+
+      // ⛔ PARADA al GENERAR el destino
+      if (v == destino) {
+        caminoFinal = sig.getCamino();
+        costeFinal  = G.costeCamino(caminoFinal);
+
+        // snapshot de cierre de esta iteración
+        generados.push_back(generados_acum);
+        inspeccionados.push_back(inspeccionados_acum);
+        return true;  // ← aquí se detiene la búsqueda
+      }
+
+      // no es destino: encolamos la nueva rama
+      frontera.push(sig);
     }
 
-    // Snapshot tras expandir u
+    // snapshot tras expandir u
     generados.push_back(generados_acum);
     inspeccionados.push_back(inspeccionados_acum);
   }
@@ -148,50 +155,56 @@ static bool BFS(const Mapa& G, int origen, int destino,
 
 // Búsqueda en profundidad (DFS)
 static bool DFS(const Mapa& G, int origen, int destino,
-                     std::vector< std::vector<int> >& generados,
-                     std::vector< std::vector<int> >& inspeccionados,
+                     std::vector<std::vector<int>>& generados,
+                     std::vector<std::vector<int>>& inspeccionados,
                      std::vector<int>& caminoFinal,
                      double& costeFinal) {
-  std::vector<Nodo> pila;
+  std::vector<Nodo> pila;   // usamos vector como pila LIFO
   std::vector<int> generados_acum;
   std::vector<int> inspeccionados_acum;
 
-  Nodo inicial(origen);
-  pila.push_back(inicial);
+  Nodo ini(origen);
+  pila.push_back(ini);
   generados_acum.push_back(origen);
 
-  // Iteración inicial
+  // Iteración 1: origen generado, nadie inspeccionado
   generados.push_back(generados_acum);
   inspeccionados.push_back(inspeccionados_acum);
 
   while (!pila.empty()) {
-    Nodo actual = pila.back();
-    pila.pop_back();
-
+    Nodo actual = pila.back(); pila.pop_back();
     int u = actual.getCamino().back();
+
+    // inspeccionamos u
     inspeccionados_acum.push_back(u);
 
-    if (u == destino) {
-      caminoFinal = actual.getCamino();
-      costeFinal = G.costeCamino(caminoFinal);
-      generados.push_back(generados_acum);
-      inspeccionados.push_back(inspeccionados_acum);
-      return true;
-    }
+    // ⛔ OJO: ya no paramos aquí; paramos al GENERAR el destino
 
     const auto& vecinos = G.vecinos(u);
+    // (opcional) orden inverso para que el 1º del vector se expanda antes
     for (int i = (int)vecinos.size() - 1; i >= 0; --i) {
       int v = vecinos[i].first;
       double w = vecinos[i].second;
-
       if (actual.contiene(v)) continue;
 
       Nodo sig = actual;
       sig.anadirPaso(v, w);
-      pila.push_back(sig);
 
-      // Control por ramas → lo agrego cada vez que se genera
+      // registramos siempre el generado (por ramas)
       generados_acum.push_back(v);
+
+      // ⛔ PARADA al GENERAR el destino
+      if (v == destino) {
+        caminoFinal = sig.getCamino();
+        costeFinal  = G.costeCamino(caminoFinal);
+
+        generados.push_back(generados_acum);
+        inspeccionados.push_back(inspeccionados_acum);
+        return true;
+      }
+
+      // no es destino: apilamos la nueva rama
+      pila.push_back(sig);
     }
 
     generados.push_back(generados_acum);
