@@ -1,34 +1,34 @@
 ----------------------------------------
 Numero de nodos del grafo: 15
 Numero de aristas del grafo: 15
-Vertice origen: 4
-Vertice destino: 9
+Vertice origen: 8
+Vertice destino: 6
 Estrategia: Busqueda en amplitud (BFS)
 ----------------------------------------
 Iteracion 1
-Nodos generados: 4
+Nodos generados: 8
 Nodos inspeccionados: -
 ----------------------------------------
 Iteracion 2
-Nodos generados: 4, 5
-Nodos inspeccionados: 4
+Nodos generados: 8, 2, 3, 15
+Nodos inspeccionados: 8
 ----------------------------------------
 Iteracion 3
-Nodos generados: 4, 5, 2, 6
-Nodos inspeccionados: 4, 5
+Nodos generados: 8, 2, 3, 15, 5, 7
+Nodos inspeccionados: 8, 2
 ----------------------------------------
 Iteracion 4
-Nodos generados: 4, 5, 2, 6, 7, 8
-Nodos inspeccionados: 4, 5, 2
+Nodos generados: 8, 2, 3, 15, 5, 7
+Nodos inspeccionados: 8, 2, 3
 ----------------------------------------
 Iteracion 5
-Nodos generados: 4, 5, 2, 6, 7, 8, 7
-Nodos inspeccionados: 4, 5, 2, 6
+Nodos generados: 8, 2, 3, 15, 5, 7
+Nodos inspeccionados: 8, 2, 3, 15
 ----------------------------------------
 Iteracion 6
-Nodos generados: 4, 5, 2, 6, 7, 8, 7, 6, 9
-Nodos inspeccionados: 4, 5, 2, 6, 7
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6
+Nodos inspeccionados: 8, 2, 3, 15, 5
 ----------------------------------------
-Camino: 4 - 5 - 2 - 7 - 9
-Costo: 21.00
+Camino: 8 - 2 - 5 - 6
+Costo: 15.00
 ----------------------------------------
