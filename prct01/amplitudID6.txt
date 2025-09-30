@@ -3,83 +3,83 @@ Numero de nodos del grafo: 15
 Numero de aristas del grafo: 14
 Vertice origen: 8
 Vertice destino: 9
-Estrategia: Busqueda en profundidad (DFS)
+Estrategia: Busqueda en amplitud (BFS)
 ----------------------------------------
 Iteracion 1
 Nodos generados: 8
 Nodos inspeccionados: -
 ----------------------------------------
 Iteracion 2
-Nodos generados: 8, 15, 3, 2
+Nodos generados: 8, 2, 3, 15
 Nodos inspeccionados: 8
 ----------------------------------------
 Iteracion 3
-Nodos generados: 8, 15, 3, 2, 7, 5
-Nodos inspeccionados: 8, 2
+Nodos generados: 8, 2, 3, 15
+Nodos inspeccionados: 8, 3
 ----------------------------------------
 Iteracion 4
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4
-Nodos inspeccionados: 8, 2, 5
+Nodos generados: 8, 2, 3, 15
+Nodos inspeccionados: 8, 3, 15
 ----------------------------------------
 Iteracion 5
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4
-Nodos inspeccionados: 8, 2, 5, 4
+Nodos generados: 8, 2, 3, 15, 5, 7
+Nodos inspeccionados: 8, 3, 15, 2
 ----------------------------------------
 Iteracion 6
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7
-Nodos inspeccionados: 8, 2, 5, 4, 6
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6
+Nodos inspeccionados: 8, 3, 15, 2, 5
 ----------------------------------------
 Iteracion 7
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7
 ----------------------------------------
 Iteracion 8
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14
 ----------------------------------------
 Iteracion 9
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6
 ----------------------------------------
 Iteracion 10
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11
 ----------------------------------------
 Iteracion 11
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4
 ----------------------------------------
 Iteracion 12
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10
 ----------------------------------------
 Iteracion 13
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7
 ----------------------------------------
 Iteracion 14
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6
 ----------------------------------------
 Iteracion 15
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4, 11
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5, 10
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6, 14
 ----------------------------------------
 Iteracion 16
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4, 11, 14
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5, 10, 4
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6, 14, 5
 ----------------------------------------
 Iteracion 17
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4, 11, 14, 10
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5, 10, 4
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6, 14, 5, 11
 ----------------------------------------
 Iteracion 18
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4, 11, 14, 10, 3
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5, 10, 4
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6, 14, 5, 11, 4
 ----------------------------------------
 Iteracion 19
-Nodos generados: 8, 15, 3, 2, 7, 5, 6, 4, 7, 14, 11, 10, 14, 11, 6, 5, 4, 10
-Nodos inspeccionados: 8, 2, 5, 4, 6, 7, 11, 14, 10, 7, 6, 5, 4, 11, 14, 10, 3, 15
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 11, 14, 10, 7, 11, 14, 5, 10, 4
+Nodos inspeccionados: 8, 3, 15, 2, 5, 7, 14, 6, 11, 4, 10, 7, 6, 14, 5, 11, 4, 10
 ----------------------------------------
 Camino: no encontrado
 ----------------------------------------

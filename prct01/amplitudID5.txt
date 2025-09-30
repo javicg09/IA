@@ -14,21 +14,29 @@ Nodos generados: 8, 2, 3, 15
 Nodos inspeccionados: 8
 ----------------------------------------
 Iteracion 3
-Nodos generados: 8, 2, 3, 15, 5, 7
-Nodos inspeccionados: 8, 2
+Nodos generados: 8, 2, 3, 15
+Nodos inspeccionados: 8, 3
 ----------------------------------------
 Iteracion 4
 Nodos generados: 8, 2, 3, 15, 5, 7
-Nodos inspeccionados: 8, 2, 3
+Nodos inspeccionados: 8, 3, 2
 ----------------------------------------
 Iteracion 5
-Nodos generados: 8, 2, 3, 15, 5, 7
-Nodos inspeccionados: 8, 2, 3, 15
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6
+Nodos inspeccionados: 8, 3, 2, 5
 ----------------------------------------
 Iteracion 6
-Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6
-Nodos inspeccionados: 8, 2, 3, 15, 5
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 9, 11, 14
+Nodos inspeccionados: 8, 3, 2, 5, 7
+----------------------------------------
+Iteracion 7
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 9, 11, 14, 10
+Nodos inspeccionados: 8, 3, 2, 5, 7, 14
+----------------------------------------
+Iteracion 8
+Nodos generados: 8, 2, 3, 15, 5, 7, 4, 6, 6, 9, 11, 14, 10
+Nodos inspeccionados: 8, 3, 2, 5, 7, 14, 6
 ----------------------------------------
 Camino: 8 - 2 - 5 - 6
-Costo: 15.00
+Costo: 15
 ----------------------------------------
